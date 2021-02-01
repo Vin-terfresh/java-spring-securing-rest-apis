@@ -32,9 +32,8 @@ public class ResolutionController {
 	}
 
 	@PostMapping("/resolution")
-	public Resolution make(@RequestBody String text) {
-		String owner = "user";
-		Resolution resolution = new Resolution(text, owner);
+	public Resolution make(@CurrentUsername String username, @RequestBody String text) {
+		Resolution resolution = new Resolution(text, username);
 		return this.resolutions.save(resolution);
 	}
 
