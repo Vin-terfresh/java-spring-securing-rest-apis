@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserRepositoryUserDetailsService implements UserDetailsService {
 
@@ -32,7 +33,17 @@ public class UserRepositoryUserDetailsService implements UserDetailsService {
         public List<GrantedAuthority> getAuthorities() {
             return this.userAuthorities.stream()
                     .map(UserAuthority::getAuthority)
-                    .map(SimpleGrantedAuthority::new)
+                    .flatMap(authority -> {
+                        if (authority.equals("ROLE_ADMIN")) {
+                            return Stream.of(
+                                    new SimpleGrantedAuthority("resolution:read"),
+                                    new SimpleGrantedAuthority("resolution:write"),
+                                    new SimpleGrantedAuthority(authority)
+                            );
+                        } else {
+                            return Stream.of(new SimpleGrantedAuthority(authority));
+                        }
+                    })
                     .collect(Collectors.toList());
         }
 

@@ -2,14 +2,13 @@ package io.jzheaux.springsecurity.resolutions;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 
     public static void main(String[] args) {
@@ -19,10 +18,16 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authz -> authz
-                        .mvcMatchers(GET, "/resolutions", "/resolution/**").hasAuthority("resolution:read")
-                        .anyRequest().hasAuthority("resolution:write"))
-                .httpBasic(basic -> {});
+                .csrf().disable()
+                .authorizeRequests(authz -> authz.anyRequest().authenticated())
+                .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .deleteCookies("JSESSIONID")
+                    .clearAuthentication(true)
+                    .logoutSuccessUrl("/login")
+                .and()
+                .httpBasic(basic -> {
+                });
     }
 
 }
