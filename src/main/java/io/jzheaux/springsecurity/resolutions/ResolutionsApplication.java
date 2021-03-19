@@ -21,13 +21,14 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests(authz -> authz.anyRequest().authenticated())
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .deleteCookies("JSESSIONID")
-                    .clearAuthentication(true)
-                    .logoutSuccessUrl("/login")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .deleteCookies("JSESSIONID")
+                .clearAuthentication(true)
+                .logoutSuccessUrl("/login")
                 .and()
-                .httpBasic(basic -> {
-                });
+                .httpBasic(basic -> {})
+                .cors(cors -> {})
+        ;
     }
 
 }
