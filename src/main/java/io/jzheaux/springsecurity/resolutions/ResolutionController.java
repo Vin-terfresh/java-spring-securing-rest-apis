@@ -47,6 +47,7 @@ public class ResolutionController {
 		return this.resolutions.findById(id);
 	}
 
+
 	@PostMapping("/resolution")
 	@PreAuthorize("hasAuthority('resolution:write')")
 	public Resolution make(@CurrentUsername String username, @RequestBody String text) {
