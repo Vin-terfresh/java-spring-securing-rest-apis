@@ -1,5 +1,6 @@
 package io.jzheaux.springsecurity.resolutions;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -10,6 +11,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    UserRepositoryJwtAuthenticationConverter authenticationConverter;
 
     public static void main(String[] args) {
         SpringApplication.run(ResolutionsApplication.class, args);
@@ -27,6 +31,7 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and()
                 .httpBasic(basic -> {})
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(this.authenticationConverter))
                 .cors(cors -> {})
         ;
     }

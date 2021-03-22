@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Entity(name="users")
+@Entity(name = "users")
 public class User implements Serializable {
 
     @Id
@@ -21,7 +21,11 @@ public class User implements Serializable {
 
     @Column
     protected boolean enabled = true;
-    @OneToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+
+    @Column(name = "full_name")
+    protected String fullName;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected Collection<UserAuthority> userAuthorities = new ArrayList<>();
 
     public User() {
@@ -38,6 +42,7 @@ public class User implements Serializable {
         this.username = user.username;
         this.password = user.password;
         this.enabled = user.enabled;
+        this.fullName = user.fullName;
         this.userAuthorities = user.userAuthorities.stream().map(UserAuthority::new).collect(Collectors.toList());
     }
 
@@ -76,6 +81,14 @@ public class User implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Collection<UserAuthority> getUserAuthorities() {
