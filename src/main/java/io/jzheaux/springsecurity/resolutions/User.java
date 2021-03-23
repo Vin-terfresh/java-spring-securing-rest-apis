@@ -49,6 +49,7 @@ public class User implements Serializable {
         this.password = user.password;
         this.enabled = user.enabled;
         this.fullName = user.fullName;
+        this.subscription = user.subscription;
         this.userAuthorities = user.userAuthorities.stream().map(UserAuthority::new).collect(Collectors.toList());
         this.friends = user.friends.stream().map(User::new).collect(Collectors.toList());
     }
