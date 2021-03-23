@@ -25,8 +25,14 @@ public class User implements Serializable {
     @Column(name = "full_name")
     protected String fullName;
 
+    @Column
+    String subscription;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected Collection<UserAuthority> userAuthorities = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Collection<User> friends = new ArrayList<>();
 
     public User() {
     }
@@ -44,6 +50,7 @@ public class User implements Serializable {
         this.enabled = user.enabled;
         this.fullName = user.fullName;
         this.userAuthorities = user.userAuthorities.stream().map(UserAuthority::new).collect(Collectors.toList());
+        this.friends = user.friends.stream().map(User::new).collect(Collectors.toList());
     }
 
     public void grantAuthority(String authority) {
@@ -91,11 +98,31 @@ public class User implements Serializable {
         this.fullName = fullName;
     }
 
+    public String getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(String subscription) {
+        this.subscription = subscription;
+    }
+
     public Collection<UserAuthority> getUserAuthorities() {
         return userAuthorities;
     }
 
     public void setUserAuthorities(Collection<UserAuthority> userAuthorities) {
         this.userAuthorities = userAuthorities;
+    }
+
+    public void addFriend(User friend) {
+        friends.add(friend);
+    }
+
+    public Collection<User> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Collection<User> friends) {
+        this.friends = friends;
     }
 }

@@ -1,8 +1,11 @@
 package io.jzheaux.springsecurity.resolutions;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.server.resource.introspection.NimbusOpaqueTokenIntrospector;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,5 +29,14 @@ public class SecurityConfiguration {
                         .allowedHeaders("Authorization");
             }
         };
+    }
+
+    @Bean
+    public OpaqueTokenIntrospector introspector(UserRepository users, OAuth2ResourceServerProperties properties) {
+        OpaqueTokenIntrospector introspector = new NimbusOpaqueTokenIntrospector(
+                properties.getOpaquetoken().getIntrospectionUri(),
+                properties.getOpaquetoken().getClientId(),
+                properties.getOpaquetoken().getClientSecret());
+        return new UserRepositoryOpaqueTokenIntrospector(introspector, users);
     }
 }

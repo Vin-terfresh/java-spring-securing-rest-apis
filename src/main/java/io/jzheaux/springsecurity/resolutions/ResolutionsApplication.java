@@ -31,7 +31,7 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and()
                 .httpBasic(basic -> {})
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt().jwtAuthenticationConverter(this.authenticationConverter))
+                .oauth2ResourceServer(oauth2 -> oauth2.opaqueToken())
                 .cors(cors -> {})
         ;
     }
